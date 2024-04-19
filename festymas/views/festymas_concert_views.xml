@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+	<record id="view_festymas_concert_tree" model="ir.ui.view">
+		<field name="name">view.festymas.concert.tree</field>
+		<field name="model">festymas.concert</field>
+		<field name="arch" type="xml">
+			<tree string="Concerts">
+				<field name="name" />
+				<field name="description" />
+				<field name="date" />
+				<field name="location_id" />
+				<field name="festymas_participant_ids" />
+			</tree>
+		</field>
+	</record>
+
+	<record id="view_festymas_concert_form" model="ir.ui.view">
+		<field name="name">view.festymas.concert.form</field>
+		<field name="model">festymas.concert</field>
+		<field name="arch" type="xml">
+			<form string="Concerts">
+				<group>
+					<field name="name" />
+					<field name="description" />
+					<field name="date" />
+					<field name="location_id" />
+					<field name="festymas_participant_ids" >
+						<tree string="Participants">
+							<field name="name" />
+						</tree>
+					</field>
+				</group>
+			</form>
+		</field>
+	</record>
+
+    <record id="action_festymas_concert" model="ir.actions.act_window">
+        <field name="name">Concerts</field>
+        <field name="res_model">festymas.concert</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_festymas_concert_tree"/>
+    </record>
+
+</odoo>

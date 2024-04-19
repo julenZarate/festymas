@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+	<record id="view_festymas_artist_tree" model="ir.ui.view">
+		<field name="name">view.festymas.artist.tree</field>
+		<field name="model">festymas.artist</field>
+		<field name="arch" type="xml">
+			<tree string="Artists">
+				<field name="name" />
+			</tree>
+		</field>
+	</record>
+
+	<record id="view_festymas_artist_form" model="ir.ui.view">
+		<field name="name">view.festymas.artist.form</field>
+		<field name="model">festymas.artist</field>
+		<field name="arch" type="xml">
+			<form string="Artists">
+				<group>
+					<field name="name" />
+					<field name="description" />
+					<field name="festymas_participant_ids">
+						<tree string="Participants">
+							<field name="name" />
+						</tree>
+					</field>
+				</group>
+			</form>
+		</field>
+	</record>
+
+    <record id="action_festymas_artist" model="ir.actions.act_window">
+        <field name="name">Artists</field>
+        <field name="res_model">festymas.artist</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_festymas_artist_tree"/>
+    </record>
+
+</odoo>

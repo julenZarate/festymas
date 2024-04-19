@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+	<record id="view_festymas_location_tree" model="ir.ui.view">
+		<field name="name">view.festymas.location.tree</field>
+		<field name="model">festymas.location</field>
+		<field name="arch" type="xml">
+			<tree string="Locations">
+				<field name="name" />
+			</tree>
+		</field>
+	</record>
+
+	<record id="view_festymas_location_form" model="ir.ui.view">
+		<field name="name">view.festymas.location.form</field>
+		<field name="model">festymas.location</field>
+		<field name="arch" type="xml">
+			<form string="Locations">
+				<group>
+					<field name="name" />
+					<field name="description" />
+					<field name="festymas_concert_ids">
+						<tree string="Concerts">
+							<field name="name" />
+							<field name="date" />
+						</tree>
+					</field>
+					<field name="festymas_festival_ids">
+						<tree string="Festivals">
+							<field name="name" />
+							<field name="start_date" />
+							<field name="end_date" />
+						</tree>
+					</field>
+				</group>
+			</form>
+		</field>
+	</record>
+
+    <record id="action_festymas_location" model="ir.actions.act_window">
+        <field name="name">Locations</field>
+        <field name="res_model">festymas.location</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_festymas_location_tree"/>
+    </record>
+
+</odoo>

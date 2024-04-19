@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <menuitem id="festymas"
+        name="Festymas"/>
+
+    <menuitem id="festymas_concerts"
+        name="Concerts"
+        parent="festymas.festymas"
+        action="action_festymas_concert"
+        sequence="10"/>
+		
+	<menuitem id="festymas_festivals"
+		name="Festivals"
+		parent="festymas.festymas"
+		action="action_festymas_festival"
+		sequence="20"/>
+
+	<menuitem id="festymas_locations"
+		name="Locations"
+		parent="festymas.festymas"
+		action="action_festymas_location"
+		sequence="40"/>
+
+	<menuitem id="festymas_participants"
+		name="Participants"
+		parent="festymas.festymas"
+		action="action_festymas_participant"
+		sequence="30"/>
+
+	<menuitem id="festymas_artists"
+		name="Artists"
+		parent="festymas.festymas"
+		action="action_festymas_artist"
+		sequence="30"/>
+</odoo>
