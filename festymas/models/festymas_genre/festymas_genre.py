@@ -11,4 +11,3 @@ class FestymasGenre(models.Model):
 
     name = fields.Char(string="Name", required=True)
     description = fields.Text(string="Description")
-

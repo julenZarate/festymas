@@ -31,7 +31,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"fields\": [\"name\", \"description\", \"location_id\"]\n}"
+					"raw": "{}"
 				},
 				"url": {
 					"raw": "http://localhost:8069/festymas/concerts",
@@ -43,6 +43,137 @@
 					"path": [
 						"festymas",
 						"concerts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Concierto by ID",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "db",
+						"value": "festymas",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "41e9d2a8e1cdc95092defdf5e25b6ac5",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{}"
+				},
+				"url": {
+					"raw": "http://localhost:8069/festymas/concerts/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8069",
+					"path": [
+						"festymas",
+						"concerts",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Participantes",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "db",
+						"value": "festymas",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "41e9d2a8e1cdc95092defdf5e25b6ac5",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{}"
+				},
+				"url": {
+					"raw": "http://localhost:8069/festymas/participants",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8069",
+					"path": [
+						"festymas",
+						"participants"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Participantes by ID",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "db",
+						"value": "festymas",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "41e9d2a8e1cdc95092defdf5e25b6ac5",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{}"
+				},
+				"url": {
+					"raw": "http://localhost:8069/festymas/participants/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8069",
+					"path": [
+						"festymas",
+						"participants",
+						"1"
 					]
 				}
 			},
@@ -77,7 +208,50 @@
 					"raw": "{}"
 				},
 				"url": {
-					"raw": "http://localhost:8069/festymas/artists/listener",
+					"raw": "http://localhost:8069/festymas/artists",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8069",
+					"path": [
+						"festymas",
+						"artists"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Artistas by ID",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "db",
+						"value": "festymas",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "41e9d2a8e1cdc95092defdf5e25b6ac5",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{}"
+				},
+				"url": {
+					"raw": "http://localhost:8069/festymas/artists/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -86,7 +260,94 @@
 					"path": [
 						"festymas",
 						"artists",
-						"listener"
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Generos",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "db",
+						"value": "festymas",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "41e9d2a8e1cdc95092defdf5e25b6ac5",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{}"
+				},
+				"url": {
+					"raw": "http://localhost:8069/festymas/genres",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8069",
+					"path": [
+						"festymas",
+						"genres"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Generos by ID",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "db",
+						"value": "festymas",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "41e9d2a8e1cdc95092defdf5e25b6ac5",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{}"
+				},
+				"url": {
+					"raw": "http://localhost:8069/festymas/genres/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8069",
+					"path": [
+						"festymas",
+						"genres",
+						"1"
 					]
 				}
 			},
@@ -118,10 +379,53 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"id\": 1,\n    \"fields\": [\"name\", \"description\"]\n}"
+					"raw": "{\n    \"id\": 1,\n    \"fields\": [\"name\", \"description\", \"location_id\", \"start_date\", \"end_date\"]\n}"
 				},
 				"url": {
-					"raw": "http://localhost:8069/festymas/festivals/listener",
+					"raw": "http://localhost:8069/festymas/festivals",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8069",
+					"path": [
+						"festymas",
+						"festivals"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Festivales by ID",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "db",
+						"value": "festymas",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "41e9d2a8e1cdc95092defdf5e25b6ac5",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": 1,\n    \"fields\": [\"name\", \"description\", \"location_id\", \"start_date\", \"end_date\"]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8069/festymas/festivals/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -130,7 +434,7 @@
 					"path": [
 						"festymas",
 						"festivals",
-						"listener"
+						"1"
 					]
 				}
 			},
@@ -165,7 +469,50 @@
 					"raw": "{}"
 				},
 				"url": {
-					"raw": "http://localhost:8069/festymas/locations/listener",
+					"raw": "http://localhost:8069/festymas/locations",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8069",
+					"path": [
+						"festymas",
+						"locations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Lugares by ID",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "db",
+						"value": "festymas",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "41e9d2a8e1cdc95092defdf5e25b6ac5",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{}"
+				},
+				"url": {
+					"raw": "http://localhost:8069/festymas/locations/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -174,7 +521,7 @@
 					"path": [
 						"festymas",
 						"locations",
-						"listener"
+						"1"
 					]
 				}
 			},
