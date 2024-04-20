@@ -32,4 +32,10 @@
 		parent="festymas.festymas"
 		action="action_festymas_artist"
 		sequence="30"/>
+
+	<menuitem id="festymas_genre"
+		name="Genres"
+		parent="festymas.festymas"
+		action="action_festymas_genre"
+		sequence="30"/>
 </odoo>

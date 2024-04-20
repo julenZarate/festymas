@@ -16,6 +16,9 @@ class FestymasConcert(models.Model):
     festymas_participant_ids = fields.Many2many(
         "festymas.participant", string="Participants"
     )
+    festymas_genre_ids = fields.Many2many(
+        "festymas.genre", string="Genres"
+    )
     # images
     cartel_1920 = fields.Image("Image", max_width=1920, max_height=1920)
     # resized fields stored (as attachment) for performance

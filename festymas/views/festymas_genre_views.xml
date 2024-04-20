@@ -16,10 +16,47 @@
 		<field name="model">festymas.genre</field>
 		<field name="arch" type="xml">
 			<form string="Genres">
+				<div class="oe_title">
+					<h1>
+						<field name="name" default_focus="1" placeholder="Name"/>
+					</h1>
+				</div>
 				<group>
-					<field name="name" />
 					<field name="description" />
 				</group>
+				<notebook colspan="4">
+					<page string="Artists" name="artists" autofocus="autofocus">
+						<field name="festymas_artist_ids" >
+							<tree string="Artists">
+								<field name="name" />
+							</tree>
+						</field>
+					</page>
+					<page string="Concerts" name="concerts">
+						<field name="festymas_concert_ids" >
+							<tree string="Concerts">
+								<field name="name" />
+								<field name="date" />
+							</tree>
+						</field>
+					</page>
+					<page string="Participants" name="participants">
+						<field name="festymas_participant_ids" >
+							<tree string="Participants">
+								<field name="name" />
+							</tree>
+						</field>
+					</page>
+					<page string="Festivals" name="festivals">
+						<field name="festymas_festival_ids" >
+							<tree string="Festivals">
+								<field name="name" />
+								<field name="start_date" />
+								<field name="end_date" />
+							</tree>
+						</field>
+					</page>
+				</notebook>
 			</form>
 		</field>
 	</record>
