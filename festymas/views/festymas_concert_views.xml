@@ -30,6 +30,11 @@
 					<field name="description" />
 					<field name="date" />
 					<field name="location_id" />
+					<field name="festymas_genre_ids" >
+						<tree string="Genres">
+							<field name="name" />
+						</tree>
+					</field>
 				</group>
 				<notebook colspan="4">
 					<page string="Participants" name="participants" autofocus="autofocus">

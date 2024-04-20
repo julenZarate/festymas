@@ -32,6 +32,11 @@
 					<field name="start_date" />
 					<field name="end_date" />
 					<field name="location_id" />
+					<field name="festymas_genre_ids" >
+						<tree string="Genres">
+							<field name="name" />
+						</tree>
+					</field>
 				</group>
 				<notebook colspan="4">
 					<page string="Concerts" name="concerts" autofocus="autofocus">

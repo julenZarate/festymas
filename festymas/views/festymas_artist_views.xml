@@ -19,6 +19,11 @@
 				<group>
 					<field name="name" />
 					<field name="description" />
+					<field name="festymas_genre_ids" >
+						<tree string="Genres">
+							<field name="name" />
+						</tree>
+					</field>
 					<field name="festymas_participant_ids">
 						<tree string="Participants">
 							<field name="name" />
