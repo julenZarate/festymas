@@ -12,11 +12,15 @@ _logger = logging.getLogger(__name__)
 
 
 class FestymasController(http.Controller):
-    @http.route(
-        "/festymas/concerts", type="json", auth="none", no_jsonrpc=True
+    @http.route([
+        "/festymas/concerts",
+        "/festymas/concerts/<model('festymas.concert'):name>'"],
+        type="json",
+        auth="none",
+        no_jsonrpc=True
     )
     def festymas_concerts(self):
-        fields = []
+        fields = ["name", "description", "location_id", "date", "festymas_participant_ids", "cartel_1920"]
         login_error = self._check_login(request.httprequest.headers)
         if login_error:
             return login_error
@@ -30,7 +34,7 @@ class FestymasController(http.Controller):
         "/festymas/festivals", type="json", auth="none", no_jsonrpc=True
     )
     def festymas_festivals(self):
-        fields = []
+        fields = ["name", "description", "location_id", "start_date", "end_date", "festymas_concert_ids", "cartel_1920"]
         login_error = self._check_login(request.httprequest.headers)
         if login_error:
             return login_error
@@ -44,7 +48,7 @@ class FestymasController(http.Controller):
         "/festymas/locations", type="json", auth="none", no_jsonrpc=True
     )
     def festymas_locations(self):
-        fields = []
+        fields = ["name", "description", "festymas_concert_ids", "festymas_festival_ids"]
         login_error = self._check_login(request.httprequest.headers)
         if login_error:
             return login_error
@@ -58,7 +62,7 @@ class FestymasController(http.Controller):
         "/festymas/participants", type="json", auth="none", no_jsonrpc=True
     )
     def festymas_participants(self):
-        fields = []
+        fields = ["name", "description", "country_id", "festymas_concert_ids", "festymas_artist_ids", "festymas_concert_ids", "festymas_genre_ids", "cartel_1920"]
         login_error = self._check_login(request.httprequest.headers)
         if login_error:
             return login_error
@@ -84,12 +88,9 @@ class FestymasController(http.Controller):
 
     @staticmethod
     def _check_login(headers):
-        # Check Database in headers
         db = headers.get("db")
         if not db:
             return http.Response("Not found Database in request", status=404)
-
-        # Check Database in environment
         try:
             db_list = http.db_list(force=True)
         except AccessDenied:
@@ -100,8 +101,6 @@ class FestymasController(http.Controller):
             )
 
         request.session.db = db
-
-        # Check Request Method
         endpoint = headers.environ.get("PATH_INFO")
         method = headers.environ.get("REQUEST_METHOD")
         if endpoint == "/festymas/concerts/" and method != "GET":
@@ -110,17 +109,11 @@ class FestymasController(http.Controller):
         festymas_token = (
             request.env["ir.config_parameter"].sudo().get_param("festymas.token")
         )
-
-        # Check Created festymas_token
         if not festymas_token:
             return http.Response("Not found Festymas Token In Environment", status=500)
-
-        # Check Authorization
         token = headers.get("Authorization")
         if not token:
             return http.Response("Not found Authorization", status=404)
-
-        # Check valid Token
         if token != festymas_token:
             return http.Response("Invalid Authorization", status=401)
 
@@ -133,7 +126,7 @@ class FestymasController(http.Controller):
             fields=search_fields
         )
         count = len(festymas_concerts)
-        return festymas_concerts
+        return count, festymas_concerts
 
     @staticmethod
     def get_festymas_festivals(fields=[]):

@@ -10,6 +10,7 @@
     "data": [
         "security/ir.model.access.csv",
         "views/festymas_artist_views.xml",
+        "views/festymas_genre_views.xml",
         "views/festymas_participant_views.xml",
         "views/festymas_concert_views.xml",
         "views/festymas_festival_views.xml",
