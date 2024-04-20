@@ -16,23 +16,35 @@
 		<field name="model">festymas.location</field>
 		<field name="arch" type="xml">
 			<form string="Locations">
+				<field name="cartel_1920" widget='image' class="oe_avatar" options='{"preview_image": "cartel_128"}'/>
+				<div class="oe_title">
+					<h1>
+						<field name="name" default_focus="1" placeholder="Name"/>
+					</h1>
+				</div>
 				<group>
-					<field name="name" />
 					<field name="description" />
-					<field name="festymas_concert_ids">
-						<tree string="Concerts">
-							<field name="name" />
-							<field name="date" />
-						</tree>
-					</field>
-					<field name="festymas_festival_ids">
-						<tree string="Festivals">
-							<field name="name" />
-							<field name="start_date" />
-							<field name="end_date" />
-						</tree>
-					</field>
+					<field name="is_concert_hall" />
 				</group>
+				<notebook colspan="4">
+					<page string="Concerts" name="participants" autofocus="autofocus">
+						<field name="festymas_concert_ids">
+							<tree string="Concerts">
+								<field name="name" />
+								<field name="date" />
+							</tree>
+						</field>
+					</page>
+					<page string="Festivals" name="participants" autofocus="autofocus">
+						<field name="festymas_festival_ids">
+							<tree string="Festivals">
+								<field name="name" />
+								<field name="start_date" />
+								<field name="end_date" />
+							</tree>
+						</field>
+					</page>
+				</notebook>
 			</form>
 		</field>
 	</record>

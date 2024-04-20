@@ -6,3 +6,4 @@ from . import festymas_festival
 from . import festymas_location
 from . import festymas_participant
 from . import festymas_artist
+from . import festymas_genre

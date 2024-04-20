@@ -11,9 +11,4 @@ class FestymasGenre(models.Model):
 
     name = fields.Char(string="Name", required=True)
     description = fields.Text(string="Description")
-    festymas_participant_ids = fields.Many2many(
-        "festymas.participant", string="Participants"
-    )
-    festymas_artist_ids = fields.Many2many(
-        "festymas.artist", string="Artists"
-    )
+
