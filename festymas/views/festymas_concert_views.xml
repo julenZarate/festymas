@@ -44,6 +44,13 @@
 							</tree>
 						</field>
 					</page>
+					<page string="Festivals" name="festivals" autofocus="autofocus">
+						<field name="festymas_festival_ids" >
+							<tree string="Festivals">
+								<field name="name" />
+							</tree>
+						</field>
+					</page>
 				</notebook>
 			</form>
 		</field>
