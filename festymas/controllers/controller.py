@@ -195,13 +195,7 @@ class FestymasController(http.Controller):
             return http.Response(
                 "Not found {} Database in " "environment".format(db), status=400
             )
-
         request.session.db = db
-        endpoint = headers.environ.get("PATH_INFO")
-        method = headers.environ.get("REQUEST_METHOD")
-        if endpoint == "/festymas/concerts/" and method != "GET":
-            return http.Response("Only GET method is allowed", status=500)
-
         festymas_token = (
             request.env["ir.config_parameter"].sudo().get_param("festymas.token")
         )
