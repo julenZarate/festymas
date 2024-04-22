@@ -29,6 +29,8 @@ class FestymasController(http.Controller):
             "location_id",
             "date",
             "festymas_participant_ids",
+            "festymas_festival_ids",
+            "festymas_genre_ids",
             "cartel_1920",
         ]
         login_error = False
@@ -58,6 +60,7 @@ class FestymasController(http.Controller):
             "start_date",
             "end_date",
             "festymas_concert_ids",
+            "festymas_genre_ids",
             "cartel_1920",
         ]
         login_error = False
@@ -163,7 +166,13 @@ class FestymasController(http.Controller):
     )
     def festymas_genres(self, id=None, **kw):
         domain = []
-        fields = ["name", "description", "festymas_participant_ids"]
+        fields = [
+            "name",
+            "description",
+            "festymas_participant_ids",
+            "festymas_festival_ids",
+            "festymas_concert_ids",
+        ]
         login_error = False
         if login_error:
             return login_error
