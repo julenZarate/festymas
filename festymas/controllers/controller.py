@@ -43,7 +43,10 @@ class FestymasController(http.Controller):
     @http.route(
         ["/festymas/festivals", "/festymas/festivals/<int:id>"],
         type="json",
-        auth="none",
+        cors="*",
+        csrf=False,
+        methods=["POST", "GET", "OPTIONS"],
+        auth="public",
         no_jsonrpc=True,
     )
     def festymas_festivals(self, id=None, **kw):
@@ -62,8 +65,6 @@ class FestymasController(http.Controller):
             return login_error
         if id:
             domain = [("id", "=", id)]
-        if request.httprequest.data != b"{}":
-            fields = json.loads(request.httprequest.data)["fields"]
         data = self.get_festymas_festivals(fields, domain)
 
         return data
@@ -71,7 +72,10 @@ class FestymasController(http.Controller):
     @http.route(
         ["/festymas/locations", "/festymas/locations/<int:id>"],
         type="json",
-        auth="none",
+        cors="*",
+        csrf=False,
+        methods=["POST", "GET", "OPTIONS"],
+        auth="public",
         no_jsonrpc=True,
     )
     def festymas_locations(self, id=None, **kw):
@@ -87,8 +91,6 @@ class FestymasController(http.Controller):
             return login_error
         if id:
             domain = [("id", "=", id)]
-        if request.httprequest.data != b"{}":
-            fields = json.loads(request.httprequest.data)["fields"]
         data = self.get_festymas_locations(fields, domain)
 
         return data
@@ -119,8 +121,6 @@ class FestymasController(http.Controller):
             return login_error
         if id:
             domain = [("id", "=", id)]
-        if request.httprequest.data != b"{}":
-            fields = json.loads(request.httprequest.data)["fields"]
         data = self.get_festymas_participants(fields, domain)
 
         return data
@@ -145,8 +145,6 @@ class FestymasController(http.Controller):
             return login_error
         if id:
             domain = [("id", "=", id)]
-        if request.httprequest.data != b"{}":
-            fields = json.loads(request.httprequest.data)["fields"]
         data = self.get_festymas_artists(fields, domain)
 
         return data
@@ -171,15 +169,13 @@ class FestymasController(http.Controller):
             return login_error
         if id:
             domain = [("id", "=", id)]
-        if request.httprequest.data != b"{}":
-            fields = json.loads(request.httprequest.data)["fields"]
         data = self.get_festymas_genres(fields, domain)
 
         return data
 
     @staticmethod
     def _check_login(headers):
-        db = "festymas"
+        db = "festymas_test"
         if not db:
             return http.Response("Not found Database in request", status=404)
         try:
