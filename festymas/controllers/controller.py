@@ -31,7 +31,7 @@ class FestymasController(http.Controller):
             "festymas_participant_ids",
             "cartel_1920",
         ]
-        login_error = self._check_login(request.httprequest.headers)
+        login_error = False
         if login_error:
             return login_error
         if id:
@@ -60,7 +60,7 @@ class FestymasController(http.Controller):
             "festymas_concert_ids",
             "cartel_1920",
         ]
-        login_error = self._check_login(request.httprequest.headers)
+        login_error = False
         if login_error:
             return login_error
         if id:
@@ -86,7 +86,7 @@ class FestymasController(http.Controller):
             "festymas_concert_ids",
             "festymas_festival_ids",
         ]
-        login_error = self._check_login(request.httprequest.headers)
+        login_error = False
         if login_error:
             return login_error
         if id:
@@ -116,7 +116,7 @@ class FestymasController(http.Controller):
             "festymas_genre_ids",
             "cartel_1920",
         ]
-        login_error = self._check_login(request.httprequest.headers)
+        login_error = False
         if login_error:
             return login_error
         if id:
@@ -140,7 +140,7 @@ class FestymasController(http.Controller):
     def festymas_artist(self, id=None, **kw):
         domain = []
         fields = ["name", "description", "festymas_participant_ids"]
-        login_error = self._check_login(request.httprequest.headers)
+        login_error = False
         if login_error:
             return login_error
         if id:
@@ -164,7 +164,7 @@ class FestymasController(http.Controller):
     def festymas_genres(self, id=None, **kw):
         domain = []
         fields = ["name", "description", "festymas_participant_ids"]
-        login_error = self._check_login(request.httprequest.headers)
+        login_error = False
         if login_error:
             return login_error
         if id:
