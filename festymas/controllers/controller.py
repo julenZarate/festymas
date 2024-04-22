@@ -15,6 +15,9 @@ class FestymasController(http.Controller):
     @http.route(
         ["/festymas/concerts", "/festymas/concerts/<int:id>"],
         type="json",
+        cors="*",
+        csrf=False,
+        methods=["POST", "GET", "OPTIONS"],
         auth="public",
         no_jsonrpc=True,
     )
@@ -33,8 +36,6 @@ class FestymasController(http.Controller):
             return login_error
         if id:
             domain = [("id", "=", id)]
-        if request.httprequest.data != b"{}":
-            fields = json.loads(request.httprequest.data)["fields"]
         data = self.get_festymas_concerts(fields, domain)
 
         return data
@@ -95,7 +96,10 @@ class FestymasController(http.Controller):
     @http.route(
         ["/festymas/participants", "/festymas/participants/<int:id>"],
         type="json",
-        auth="none",
+        cors="*",
+        csrf=False,
+        methods=["POST", "GET", "OPTIONS"],
+        auth="public",
         no_jsonrpc=True,
     )
     def festymas_participants(self, id=None, **kw):
@@ -127,7 +131,10 @@ class FestymasController(http.Controller):
             "/festymas/artists/<int:id>",
         ],
         type="json",
-        auth="none",
+        cors="*",
+        csrf=False,
+        methods=["POST", "GET", "OPTIONS"],
+        auth="public",
         no_jsonrpc=True,
     )
     def festymas_artist(self, id=None, **kw):
@@ -150,7 +157,10 @@ class FestymasController(http.Controller):
             "/festymas/genres/<int:id>",
         ],
         type="json",
-        auth="none",
+        cors="*",
+        csrf=False,
+        methods=["POST", "GET", "OPTIONS"],
+        auth="public",
         no_jsonrpc=True,
     )
     def festymas_genres(self, id=None, **kw):
@@ -169,7 +179,7 @@ class FestymasController(http.Controller):
 
     @staticmethod
     def _check_login(headers):
-        db = headers.get("db")
+        db = "festymas"
         if not db:
             return http.Response("Not found Database in request", status=404)
         try:
