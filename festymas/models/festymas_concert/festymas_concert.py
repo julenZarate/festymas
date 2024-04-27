@@ -13,15 +13,12 @@ class FestymasConcert(models.Model):
     description = fields.Text(string="Description")
     location_id = fields.Many2one("festymas.location", string="Location")
     date = fields.Date(string="Date")
+    price = fields.Float(string="Price")
     festymas_participant_ids = fields.Many2many(
         "festymas.participant", string="Participants"
     )
-    festymas_genre_ids = fields.Many2many(
-        "festymas.genre", string="Genres"
-    )
-    festymas_festival_ids = fields.Many2many(
-        "festymas.festival", string="Festivals"
-    )
+    festymas_genre_ids = fields.Many2many("festymas.genre", string="Genres")
+    festymas_festival_ids = fields.Many2many("festymas.festival", string="Festivals")
     # images
     cartel_1920 = fields.Image("Image", max_width=1920, max_height=1920)
     # resized fields stored (as attachment) for performance
