@@ -12,8 +12,9 @@ class FestymasConcert(models.Model):
     name = fields.Char(string="Name", required=True)
     description = fields.Text(string="Description")
     location_id = fields.Many2one("festymas.location", string="Location")
-    date = fields.Date(string="Date")
+    start_date = fields.Date(string="Start Date")
     price = fields.Float(string="Price")
+    visit_count = fields.Integer(string="Visit Count", default=0)
     festymas_participant_ids = fields.Many2many(
         "festymas.participant", string="Participants"
     )
