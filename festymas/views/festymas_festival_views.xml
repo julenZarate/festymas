@@ -25,6 +25,7 @@
 				<div class="oe_title">
 					<h1>
 						<field name="name" default_focus="1" placeholder="Name"/>
+						<field name="visit_count" class="oe_readonly" />
 					</h1>
 				</div>
 				<group>

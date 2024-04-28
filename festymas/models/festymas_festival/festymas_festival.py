@@ -15,6 +15,7 @@ class FestymasFestival(models.Model):
     start_date = fields.Date(string="Start Date")
     end_date = fields.Date(string="End Date")
     price = fields.Float(string="Price")
+    visit_count = fields.Integer(string="Visit Count", default=0)
     festymas_concert_ids = fields.Many2many(
         string="Concerts", comodel_name="festymas.concert"
     )

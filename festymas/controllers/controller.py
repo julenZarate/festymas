@@ -13,12 +13,14 @@ _logger = logging.getLogger(__name__)
 
 class FestymasController(http.Controller):
     _items_per_page = 10
+    _items_per_home = 10
 
     @http.route(
         [
             "/festymas/concerts",
             "/festymas/concerts/<string:id>",
             "/festymas/concerts/page/<int:page>",
+            "/festymas/concerts/home",
         ],
         type="json",
         cors="*",
@@ -28,6 +30,12 @@ class FestymasController(http.Controller):
         no_jsonrpc=True,
     )
     def festymas_concerts(self, id=None, page=None, **kw):
+        domain = []
+        if request.dispatcher:
+            body = request.dispatcher.jsonrequest
+            if body.get("adjustment"):
+                domain = self._generate_adjustment_domain(body.get("adjustment"))
+        model = "festymas.concert"
         offset = False
         limit = False
         sort = False
@@ -37,29 +45,32 @@ class FestymasController(http.Controller):
                 + " "
                 + request.httprequest.args.get("sort_in")
             )
-        domain = []
         fields = [
             "name",
             "description",
             "location_id",
-            "date",
+            "start_date",
             "price",
             "festymas_participant_ids",
             "festymas_festival_ids",
             "festymas_genre_ids",
             "cartel_1920",
+            "visit_count",
         ]
         login_error = False
         if login_error:
             return login_error
+        if request.httprequest.path == "/festymas/concerts/home":
+            data = self._get_festymas_home(fields, model)
+            return data
         if id:
             ids = id.split(",")
-            domain = [("id", "in", ids)]
+            domain.append(("id", "in", ids))
         if page:
             offset = ((page - 1) * self._items_per_page,)
             limit = self._items_per_page
         data = self.get_festymas_concerts(fields, domain, limit, offset, sort)
-        count = self._get_model_count("festymas.concert")
+        count = self._get_model_count(model)
         return data, count
 
     @http.route(
@@ -67,6 +78,7 @@ class FestymasController(http.Controller):
             "/festymas/festivals",
             "/festymas/festivals/<string:id>",
             "/festymas/festivals/page/<int:page>",
+            "/festymas/festivals/home",
         ],
         type="json",
         cors="*",
@@ -76,6 +88,7 @@ class FestymasController(http.Controller):
         no_jsonrpc=True,
     )
     def festymas_festivals(self, id=None, page=None, **kw):
+        model = "festymas.festival"
         offset = False
         limit = False
         sort = False
@@ -96,10 +109,14 @@ class FestymasController(http.Controller):
             "festymas_concert_ids",
             "festymas_genre_ids",
             "cartel_1920",
+            "visit_count",
         ]
         login_error = False
         if login_error:
             return login_error
+        if request.httprequest.path == "/festymas/festivals/home":
+            data = self._get_festymas_home(fields, model)
+            return data
         if id:
             ids = id.split(",")
             domain = [("id", "in", ids)]
@@ -107,7 +124,7 @@ class FestymasController(http.Controller):
             offset = ((page - 1) * self._items_per_page,)
             limit = self._items_per_page
         data = self.get_festymas_festivals(fields, domain, limit, offset, sort)
-        count = self._get_model_count("festymas.festival")
+        count = self._get_model_count(model)
         return data, count
 
     @http.route(
@@ -137,6 +154,9 @@ class FestymasController(http.Controller):
         fields = [
             "name",
             "description",
+            "city_id",
+            "state_id",
+            "country_id",
             "festymas_concert_ids",
             "festymas_festival_ids",
         ]
@@ -282,9 +302,25 @@ class FestymasController(http.Controller):
         count = self._get_model_count("festymas.genre")
         return data, count
 
+    def _get_festymas_home(self, fields, model):
+        data = (
+            request.env[model]
+            .sudo()
+            .search_read(
+                [], fields=fields, order="visit_count desc", limit=self._items_per_home
+            )
+        )
+        return data
+
     def _get_model_count(self, model):
         count = request.env[model].sudo().search_count([])
         return count
+
+    def _generate_adjustment_domain(self, adjustments):
+        domain = []
+        for adjustment in adjustments:
+            domain.append((adjustment, "in", adjustments[adjustment]))
+        return domain
 
     @staticmethod
     def _check_login(headers):

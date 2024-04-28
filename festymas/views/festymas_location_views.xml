@@ -22,16 +22,27 @@
 						<field name="name" default_focus="1" placeholder="Name"/>
 					</h1>
 				</div>
-				<group>
+				<group name="main_fields">
 					<field name="description" />
+				</group>
+				<group name="address_fields">
+					<field name="city_id" />
+					<field name="state_id" />
+					<field name="country_id" />
+				</group>
+				<group name="other_fields">
 					<field name="is_concert_hall" />
+				</group>
+				<group name="ubication">
+					<field name="ubication_x" />
+					<field name="ubication_y" />
 				</group>
 				<notebook colspan="4">
 					<page string="Concerts" name="participants" autofocus="autofocus">
 						<field name="festymas_concert_ids">
 							<tree string="Concerts">
 								<field name="name" />
-								<field name="date" />
+								<field name="start_date" />
 							</tree>
 						</field>
 					</page>
