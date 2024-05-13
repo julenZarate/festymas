@@ -53,7 +53,9 @@ class FestymasLocation(models.Model):
         if "city_id" in vals:
             geolocator = Nominatim(user_agent="pepito")
             city_record = self.env["res.city"].browse(vals["city_id"])
-            location = geolocator.geocode(city_record.name + " " + city_record.state_id.name)
+            location = geolocator.geocode(
+                city_record.name + " " + city_record.state_id.name
+            )
             self.ubication_x = location.latitude
             self.ubication_y = location.longitude
         return super(FestymasLocation, self).write(vals)
@@ -62,7 +64,9 @@ class FestymasLocation(models.Model):
     def create(self, vals_list):
         geolocator = Nominatim(user_agent="pepito")
         city_record = self.env["res.city"].browse(vals_list[0]["city_id"])
-        location = geolocator.geocode(city_record.name + " " + city_record.state_id.name)
+        location = geolocator.geocode(
+            city_record.name + " " + city_record.state_id.name
+        )
         vals_list[0]["ubication_x"] = location.latitude
         vals_list[0]["ubication_y"] = location.longitude
         return super(FestymasLocation, self).create(vals_list)
