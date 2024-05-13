@@ -6,7 +6,7 @@
     "category": "Festymas S.L",
     "author": "Julen Zarate",
     "license": "LGPL-3",
-    "depends": ["base", "auth_signup", "contacts"],
+    "depends": ["base", "auth_signup", "contacts", "base_location", "l10n_es_toponyms"],
     "data": [
         "security/ir.model.access.csv",
         "views/festymas_artist_views.xml",
