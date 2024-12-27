@@ -22,6 +22,7 @@ class FestymasController(http.Controller):
             "/festymas/concerts/<string:id>",
             "/festymas/concerts/page/<int:page>",
             "/festymas/concerts/home",
+            "/festymas/concerts/search/<string:search>",
         ],
         type="json",
         cors="*",
@@ -30,7 +31,7 @@ class FestymasController(http.Controller):
         auth="public",
         no_jsonrpc=True,
     )
-    def festymas_concerts(self, id=None, page=None, **kw):
+    def festymas_concerts(self, id=None, page=None, search=None, **kw):
         domain = []
         if request.dispatcher:
             body = request.dispatcher.jsonrequest
@@ -72,6 +73,9 @@ class FestymasController(http.Controller):
         if id:
             ids = id.split(",")
             domain.append(("id", "in", ids))
+        if search:
+            searchs = search.split(",")
+            domain.append(("name", "in", searchs))
         if page:
             offset = ((page - 1) * self._items_per_page,)
             limit = self._items_per_page
