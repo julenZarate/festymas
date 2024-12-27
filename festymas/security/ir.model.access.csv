@@ -1,9 +1,9 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_festymas_concert,access_festymas_concert,festymas.model_festymas_concert,base.group_user,1,1,1,0
-access_festymas_festival,access_festymas_festival,festymas.model_festymas_festival,base.group_user,1,1,1,0
-access_festymas_location,access_festymas_location,festymas.model_festymas_location,base.group_user,1,1,1,0
-access_festymas_participant,access_festymas_participant,festymas.model_festymas_participant,base.group_user,1,1,1,0
-access_festymas_artist,access_festymas_artist,festymas.model_festymas_artist,base.group_user,1,1,1,0
-access_festymas_genre,access_festymas_genre,festymas.model_festymas_genre,base.group_user,1,1,1,0
+access_festymas_concert,access_festymas_concert,festymas.model_festymas_concert,base.group_user,1,1,1,1
+access_festymas_festival,access_festymas_festival,festymas.model_festymas_festival,base.group_user,1,1,1,1
+access_festymas_location,access_festymas_location,festymas.model_festymas_location,base.group_user,1,1,1,1
+access_festymas_participant,access_festymas_participant,festymas.model_festymas_participant,base.group_user,1,1,1,1
+access_festymas_artist,access_festymas_artist,festymas.model_festymas_artist,base.group_user,1,1,1,1
+access_festymas_genre,access_festymas_genre,festymas.model_festymas_genre,base.group_user,1,1,1,1
 
 
