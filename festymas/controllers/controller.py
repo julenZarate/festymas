@@ -199,6 +199,7 @@ class FestymasController(http.Controller):
             limit = self._items_per_page
         data = self.get_festymas_participants(fields, domain, limit, offset, sort)
         count = 0
+
         return data, count
 
     @http.route(
