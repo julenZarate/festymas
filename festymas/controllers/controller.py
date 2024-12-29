@@ -32,6 +32,7 @@ class FestymasController(http.Controller):
         no_jsonrpc=True,
     )
     def festymas_concerts(self, id=None, page=None, search=None, **kw):
+        model = "festymas.concert"
         domain = []
         if request.dispatcher:
             body = request.dispatcher.jsonrequest
@@ -42,7 +43,6 @@ class FestymasController(http.Controller):
             body = request.dispatcher.jsonrequest
             if body.get("adjustment"):
                 domain += self._generate_adjustment_domain(body.get("adjustment"))
-        model = "festymas.concert"
         offset = False
         limit = False
         sort = False
@@ -74,13 +74,12 @@ class FestymasController(http.Controller):
             ids = id.split(",")
             domain.append(("id", "in", ids))
         if search:
-            searchs = search.split(",")
-            domain.append(("name", "in", searchs))
+            domain.append(("name", "ilike", search))
         if page:
             offset = ((page - 1) * self._items_per_page,)
             limit = self._items_per_page
         data = self.get_festymas_concerts(fields, domain, limit, offset, sort)
-        count = len(data)
+        count = limit + offset
         return data, count
 
     @http.route(
@@ -89,6 +88,7 @@ class FestymasController(http.Controller):
             "/festymas/festivals/<string:id>",
             "/festymas/festivals/page/<int:page>",
             "/festymas/festivals/home",
+            "/festymas/festivals/search/<string:search>",
         ],
         type="json",
         cors="*",
@@ -97,7 +97,7 @@ class FestymasController(http.Controller):
         auth="public",
         no_jsonrpc=True,
     )
-    def festymas_festivals(self, id=None, page=None, **kw):
+    def festymas_festivals(self, id=None, page=None, search=None, **kw):
         model = "festymas.festival"
         domain = []
         if request.dispatcher:
@@ -137,11 +137,68 @@ class FestymasController(http.Controller):
         if id:
             ids = id.split(",")
             domain = [("id", "in", ids)]
+        if search:
+            domain.append(("name", "ilike", search))
         if page:
             offset = ((page - 1) * self._items_per_page,)
             limit = self._items_per_page
         data = self.get_festymas_festivals(fields, domain, limit, offset, sort)
-        count = len(data)
+        count = limit + offset
+        return data, count
+
+    @http.route(
+        [
+            "/festymas/participants",
+            "/festymas/participants/<string:id>",
+            "/festymas/participants/page/<int:page>",
+            "/festymas/participants/home",
+            "/festymas/participants/search/<string:search>",
+        ],
+        type="json",
+        cors="*",
+        csrf=False,
+        methods=["POST", "GET", "OPTIONS"],
+        auth="public",
+        no_jsonrpc=True,
+    )
+    def festymas_participants(self, id=None, page=None, search=None, **kw):
+        model = "festymas.participant"
+        offset = False
+        limit = False
+        sort = False
+        if request.httprequest.args.get("sort_by"):
+            sort = (
+                request.httprequest.args.get("sort_by")
+                + " "
+                + request.httprequest.args.get("sort_in")
+            )
+        domain = []
+        fields = [
+            "name",
+            "description",
+            "country_id",
+            "festymas_concert_ids",
+            "festymas_artist_ids",
+            "festymas_concert_ids",
+            "festymas_genre_ids",
+            "cartel_1920",
+        ]
+        login_error = False
+        if login_error:
+            return login_error
+        if request.httprequest.path == "/festymas/participants/home":
+            data = self._get_festymas_home(fields, model)
+            return data
+        if id:
+            ids = id.split(",")
+            domain = [("id", "in", ids)]
+        if search:
+            domain.append(("name", "ilike", search))
+        if page:
+            offset = (page - 1) * self._items_per_page
+            limit = self._items_per_page
+        data = self.get_festymas_participants(fields, domain, limit, offset, sort)
+        count = limit + offset
         return data, count
 
     @http.route(
@@ -187,54 +244,7 @@ class FestymasController(http.Controller):
             offset = ((page - 1) * self._items_per_page,)
             limit = self._items_per_page
         data = self.get_festymas_locations(fields, domain, limit, offset, sort)
-        count = len(data)
-        return data, count
-
-    @http.route(
-        [
-            "/festymas/participants",
-            "/festymas/participants/<string:id>",
-            "/festymas/participants/page/<int:page>",
-        ],
-        type="json",
-        cors="*",
-        csrf=False,
-        methods=["POST", "GET", "OPTIONS"],
-        auth="public",
-        no_jsonrpc=True,
-    )
-    def festymas_participants(self, id=None, page=None, **kw):
-        offset = False
-        limit = False
-        sort = False
-        if request.httprequest.args.get("sort_by"):
-            sort = (
-                request.httprequest.args.get("sort_by")
-                + " "
-                + request.httprequest.args.get("sort_in")
-            )
-        domain = []
-        fields = [
-            "name",
-            "description",
-            "country_id",
-            "festymas_concert_ids",
-            "festymas_artist_ids",
-            "festymas_concert_ids",
-            "festymas_genre_ids",
-            "cartel_1920",
-        ]
-        login_error = False
-        if login_error:
-            return login_error
-        if id:
-            ids = id.split(",")
-            domain = [("id", "in", ids)]
-        if page:
-            offset = ((page - 1) * self._items_per_page,)
-            limit = self._items_per_page
-        data = self.get_festymas_participants(fields, domain, limit, offset, sort)
-        count = len(data)
+        count = limit + offset
         return data, count
 
     @http.route(
@@ -272,7 +282,7 @@ class FestymasController(http.Controller):
             offset = ((page - 1) * self._items_per_page,)
             limit = self._items_per_page
         data = self.get_festymas_artists(fields, domain, limit, offset, sort)
-        count = len(data)
+        count = limit + offset
         return data, count
 
     @http.route(
@@ -316,7 +326,7 @@ class FestymasController(http.Controller):
             offset = ((page - 1) * self._items_per_page,)
             limit = self._items_per_page
         data = self.get_festymas_genres(fields, domain, limit, offset, sort)
-        count = len(data)
+        count = limit + offset
         return data, count
 
     @http.route(
@@ -356,7 +366,7 @@ class FestymasController(http.Controller):
             offset = ((page - 1) * self._items_per_page,)
             limit = self._items_per_page
         data = self.get_festymas_cities(fields, domain, limit, offset, sort)
-        count = len(data)
+        count = limit + offset
         return data, count
 
     @http.route(
@@ -394,7 +404,7 @@ class FestymasController(http.Controller):
             offset = ((page - 1) * self._items_per_page,)
             limit = self._items_per_page
         data = self.get_festymas_states(fields, domain, limit, offset, sort)
-        count = len(data)
+        count = limit + offset
         return data, count
 
     def _get_festymas_home(self, fields, model):
@@ -469,6 +479,7 @@ class FestymasController(http.Controller):
         distancia = radio_tierra * c
 
         return distancia
+
     @staticmethod
     def _check_login(headers):
         db = "festymas_test"
