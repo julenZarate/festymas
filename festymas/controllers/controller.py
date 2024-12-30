@@ -235,6 +235,9 @@ class FestymasController(http.Controller):
         fields = [
             "name",
         ]
+        fields = [
+            "name"
+        ]
         login_error = False
         if login_error:
             return login_error
@@ -259,6 +262,9 @@ class FestymasController(http.Controller):
     def festymas_states(self, id=None, page=None, search=None, **kw):
         model = "res.country"
         domain = [("country_id", "=", 68)]
+        fields = [
+            "name"
+        ]
         login_error = False
         if login_error:
             return login_error
