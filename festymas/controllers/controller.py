@@ -90,6 +90,7 @@ class FestymasController(http.Controller):
         if request.httprequest.path == "/festymas/festivals/home":
             data = self._get_festymas_home(fields, model)
             return data
+        domain = self._get_domain(model, id, search)
         data, max_pages = self._get_filtered_data(model, fields, domain, page)
         return data, max_pages
 
