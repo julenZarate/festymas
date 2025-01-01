@@ -39,10 +39,11 @@ class FestymasController(http.Controller):
             "location_id",
             "start_date",
             "price",
+            "genres",
             "festymas_participant_ids",
             "festymas_festival_ids",
             "festymas_genre_ids",
-            "cartel_1920",
+            "image_url",
             "visit_count",
         ]
         login_error = False
@@ -79,9 +80,10 @@ class FestymasController(http.Controller):
             "start_date",
             "end_date",
             "price",
+            "genres",
             "festymas_concert_ids",
             "festymas_genre_ids",
-            "cartel_1920",
+            "image_url",
             "visit_count",
         ]
         login_error = False
@@ -115,11 +117,12 @@ class FestymasController(http.Controller):
             "name",
             "description",
             "country_id",
+            "genres",
             "festymas_concert_ids",
             "festymas_artist_ids",
             "festymas_concert_ids",
             "festymas_genre_ids",
-            "cartel_1920",
+            "image_url",
         ]
         login_error = False
         if login_error:
@@ -236,9 +239,7 @@ class FestymasController(http.Controller):
         fields = [
             "name",
         ]
-        fields = [
-            "name"
-        ]
+        fields = ["name"]
         login_error = False
         if login_error:
             return login_error
@@ -263,9 +264,7 @@ class FestymasController(http.Controller):
     def festymas_states(self, id=None, page=None, search=None, **kw):
         model = "res.country"
         domain = [("country_id", "=", 68)]
-        fields = [
-            "name"
-        ]
+        fields = ["name"]
         login_error = False
         if login_error:
             return login_error

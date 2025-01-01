@@ -7,3 +7,4 @@ from . import festymas_location
 from . import festymas_participant
 from . import festymas_artist
 from . import festymas_genre
+from . import res_users

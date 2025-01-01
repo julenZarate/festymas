@@ -15,6 +15,7 @@
         "views/festymas_concert_views.xml",
         "views/festymas_festival_views.xml",
         "views/festymas_location_views.xml",
+        "views/res_users_views.xml",
         "views/menuitem_data.xml",
     ],
     "installable": True,

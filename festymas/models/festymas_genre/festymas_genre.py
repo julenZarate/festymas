@@ -8,6 +8,7 @@ from odoo import models, fields
 class FestymasGenre(models.Model):
     _name = "festymas.genre"
     _description = "Festymas Genre"
+    _rec_name = "name"
 
     name = fields.Char(string="Name", required=True)
     description = fields.Text(string="Description")
