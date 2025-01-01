@@ -2,7 +2,9 @@
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0.html)
 import secrets
 
-from odoo import models, fields
+from odoo import models, fields, api
+import requests
+import base64
 
 
 class FestymasConcert(models.Model):
@@ -19,6 +21,8 @@ class FestymasConcert(models.Model):
         "festymas.participant", string="Participants"
     )
     festymas_genre_ids = fields.Many2many("festymas.genre", string="Genres")
+    genres = fields.Char(string="Genres", compute="_compute_genres")
+    image_url = fields.Char(string="Image URL")
     festymas_festival_ids = fields.Many2many("festymas.festival", string="Festivals")
     # images
     cartel_1920 = fields.Image("Image", max_width=1920, max_height=1920)
@@ -35,3 +39,30 @@ class FestymasConcert(models.Model):
     cartel_128 = fields.Image(
         "Image 128", related="cartel_1920", max_width=128, max_height=128, store=True
     )
+    image = fields.Image(
+        string="Imagen",
+        compute="_compute_image",
+        max_width=1920,
+        max_height=1920,
+        store=True,
+    )
+
+    @api.depends("image_url")
+    def _compute_image(self):
+        for record in self:
+            if record.image_url:
+                try:
+                    response = requests.get(record.image_url)
+                    if response.status_code == 200:
+                        record.image = base64.b64encode(response.content)
+                    else:
+                        record.image = False
+                except Exception as e:
+                    record.image = False
+            else:
+                record.image = False
+
+    @api.depends("festymas_genre_ids")
+    def _compute_genres(self):
+        for record in self:
+            record.genres = ", ".join(record.festymas_genre_ids.mapped("name"))
