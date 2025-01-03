@@ -20,4 +20,6 @@ class FestymasParticipant(models.Model):
     ubication_longitude = fields.Float(string="Ubication Longitude")
     distance = fields.Float(string="Distance")
     favorite_genre_ids = fields.Many2many("festymas.genre", string="Genres")
-    # friend_users_ids = fields.Many2many("res.users", string="Friends")
+    friend_users_ids = fields.Many2many(
+        "res.users", "res_users_res_users_rel", "user_id", "friend_id", string="Friends"
+    )
