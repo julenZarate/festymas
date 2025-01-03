@@ -10,17 +10,18 @@
                     <group name="default_settings" string="Default Settings">
 						<field name="ubication_longitude" />
 						<field name="ubication_latitude" />
-                        <field name="favorite_genre_ids" widget="many2many_tags" options="{'no_create_edit': True}" />
+						<field name="distance" />
+					</group>
+					<group name="Genres" string="Genres">
+                        <field name="favorite_genre_ids" options="{'no_create_edit': True}" />
                     </group>
 					<group name="favorites" string="Favorites">
-                        <field name="favorite_participant_ids" widget="many2many_tags" options="{'no_create_edit': True}" />
-						<field name="favorite_concert_ids" widget="many2many_tags" options="{'no_create_edit': True}" />
-						<field name="favorite_festival_ids" widget="many2many_tags" options="{'no_create_edit': True}" />
+                        <field name="favorite_participant_ids" options="{'no_create_edit': True}" />
+						<field name="favorite_concert_ids" options="{'no_create_edit': True}" />
+						<field name="favorite_festival_ids"  options="{'no_create_edit': True}" />
                     </group>
 					<group name="friends" string="Friends">
-                        <field name="favorite_participant_ids" widget="many2many_tags" options="{'no_create_edit': True}" />
-						<field name="favorite_concert_ids" widget="many2many_tags" options="{'no_create_edit': True}" />
-						<field name="favorite_festival_ids" widget="many2many_tags" options="{'no_create_edit': True}" />
+                        <field name="friend_users_ids" options="{'no_create_edit': True}" />
                     </group>
                 </page>
             </xpath>

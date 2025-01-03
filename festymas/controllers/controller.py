@@ -50,7 +50,7 @@ class FestymasController(http.Controller):
         if login_error:
             return login_error
         if request.httprequest.path == "/festymas/concerts/home":
-            data = self._get_festymas_home(fields, model)
+            data = self._get_festymas_home_by_model(fields, model)
             return data
         domain = self._get_domain(model, id, search)
         data, max_pages = self._get_filtered_data(model, fields, domain, page)
@@ -90,7 +90,7 @@ class FestymasController(http.Controller):
         if login_error:
             return login_error
         if request.httprequest.path == "/festymas/festivals/home":
-            data = self._get_festymas_home(fields, model)
+            data = self._get_festymas_home_by_model(fields, model)
             return data
         domain = self._get_domain(model, id, search)
         data, max_pages = self._get_filtered_data(model, fields, domain, page)
@@ -128,7 +128,7 @@ class FestymasController(http.Controller):
         if login_error:
             return login_error
         if request.httprequest.path == "/festymas/participants/home":
-            data = self._get_festymas_home(fields, model)
+            data = self._get_festymas_home_by_model(fields, model)
             return data
         domain = self._get_domain(model, id, search)
         data, max_pages = self._get_filtered_data(model, fields, domain, page)
@@ -272,15 +272,85 @@ class FestymasController(http.Controller):
         data, max_pages = self._get_filtered_data(model, fields, domain, page)
         return data, max_pages
 
+    @http.route(
+        [
+            "/festymas/home",
+        ],
+        type="json",
+        cors="*",
+        csrf=False,
+        methods=["POST", "GET", "OPTIONS"],
+        auth="public",
+        no_jsonrpc=True,
+    )
+    def festymas_home(self, id=None, page=None, search=None, **kw):
+        user = self._get_user()
+        login_error = False
+        if login_error:
+            return login_error
+        data = self._get_festymas_home_by_user(user)
+        return data
+
+    @http.route(
+        [
+            "/festymas/users",
+            "/festymas/users/favorites/concerts",
+            "/festymas/users/favorites/participants",
+            "/festymas/users/favorites/festivals",
+            "/festymas/users/ubication",
+            "/festymas/users/adjustments",
+        ],
+        type="json",
+        cors="*",
+        csrf=False,
+        methods=["POST", "GET", "OPTIONS"],
+        auth="public",
+        no_jsonrpc=True,
+    )
+    def festymas_users(self, id=None, page=None, search=None, **kw):
+        user = self._get_user()
+        login_error = False
+        fields = False
+        model = False
+        if login_error:
+            return login_error
+        if request.httprequest.path == "/festymas/users/ubication":
+            data = self._get_festymas_users_ubication(fields, model, user)
+            return data
+        if request.httprequest.path == "/festymas/users/adjustments":
+            data = self._get_festymas_users_adjustments(fields, model, user)
+            return data
+        if request.httprequest.path == "/festymas/users/favorites/concerts":
+            model = request.env["festymas.concert"]
+            fields = "favorite_concert_ids"
+            data = self._get_festymas_users_favorites(fields, model, user)
+            return data
+        if request.httprequest.path == "/festymas/users/favorites/participants":
+            model = request.env["festymas.participant"]
+            fields = "favorite_participant_ids"
+            data = self._get_festymas_users_favorites(fields, model, user)
+            return data
+        if request.httprequest.path == "/festymas/users/favorites/festivals":
+            model = request.env["festymas.festival"]
+            fields = "favorite_festival_ids"
+            data = self._get_festymas_users_favorites(fields, model, user)
+            return data
+        return data, max_pages
+
+    def _get_user(self):
+        if request.dispatcher:
+            body = request.dispatcher.jsonrequest
+            if body.get("user"):
+                user = body.get("user").get("id")
+        user = request.env["res.users"].sudo().search([("id", "=", user)])
+        return user
+
     def _get_domain(self, model, id, search):
         domain = []
         if request.dispatcher:
             body = request.dispatcher.jsonrequest
             if body.get("ubication"):
                 domain += self._generate_ubication_domain(body.get("ubication"))
-                if not domain:
-                    return []
-            body = request.dispatcher.jsonrequest
             if body.get("adjustment"):
                 domain += self._generate_adjustment_domain(body.get("adjustment"))
         if id:
@@ -323,7 +393,15 @@ class FestymasController(http.Controller):
         }
         return filtered_data, max_pages
 
-    def _get_festymas_home(self, fields, model):
+    def _get_festymas_home_by_user(self, user):
+        data = {
+            "favorite_concert_ids": user.favorite_concert_ids.ids,
+            "favorite_festival_ids": user.favorite_festival_ids.ids,
+            "favorite_participant_ids": user.favorite_participant_ids.ids,
+        }
+        return data
+
+    def _get_festymas_home_by_model(self, fields, model):
         data = (
             request.env[model]
             .sudo()
@@ -332,6 +410,56 @@ class FestymasController(http.Controller):
             )
         )
         return data
+
+    def _get_festymas_users_favorites(self, fields, model, user):
+        if request.dispatcher:
+            body = request.dispatcher.jsonrequest
+            if body.get("favorites"):
+                favorite = body.get("favorites").get("id")
+        favorite_id = model.search([("id", "=", favorite)]).id
+        if favorite_id in getattr(user, fields).ids:
+            data = user.sudo().write(
+                {
+                    fields: [(3, favorite_id)],
+                }
+            )
+            return "Añadido a Favoritos!!"
+        else:
+            data = user.sudo().write(
+                {
+                    fields: [(4, favorite_id)],
+                }
+            )
+            return "Eliminado de Favoritos!!"
+
+    def _get_festymas_users_ubication(self, fields, model, user):
+        if request.dispatcher:
+            body = request.dispatcher.jsonrequest
+            if body.get("ubication"):
+                ubication_latitude = body.get("ubication").get("ubication_latitude")
+                ubication_longitude = body.get("ubication").get("ubication_longitude")
+        data = user.sudo().write(
+            {
+                "ubication_latitude": ubication_latitude,
+                "ubication_longitude": ubication_longitude,
+            }
+        )
+        return "Actualizada Ubicación!!"
+
+    def _get_festymas_users_adjustments(self, fields, model, user):
+        if request.dispatcher:
+            body = request.dispatcher.jsonrequest
+            if body.get("adjustments"):
+                distance = body.get("adjustments").get("distance")
+                genres = body.get("adjustments").get("genres")
+        genre_ids = request.env["festymas.genre"].search([("id", "in", genres)])
+        data = user.sudo().write(
+            {
+                "distance": distance,
+                "favorite_genre_ids": [(6, 0, genre_ids.ids)],
+            }
+        )
+        return "Actualizados Ajustes!!"
 
     def _get_model_count(self, model, domain=[]):
         count = request.env[model].sudo().search_count(domain)
