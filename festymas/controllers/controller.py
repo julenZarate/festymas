@@ -563,15 +563,16 @@ class FestymasController(http.Controller):
             offset=offset,
             order=sort,
         )
-        max_pages = {
-            "pagination": {
+        pagination = {
                 "max_pages": math.ceil(
                     self._get_model_count(model, domain) / self._items_per_page
                 )
             }
-        }
-        filtered_data.append(max_pages)
-        return filtered_data
+        data = {
+            "data": filtered_data,
+            "pagination": pagination
+            }
+        return data
 
     def _get_festymas_home_by_user(self, user):
         data = {
