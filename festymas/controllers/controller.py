@@ -134,10 +134,10 @@ class FestymasController(http.Controller):
         if login_error:
             return login_error
         if request.httprequest.path == "/festymas/festivals/home":
+            data = self._get_festymas_home_by_model(fields, model)
             return Response(
                 json.dumps(data), content_type="application/json", status=200
             )
-            return data
         domain = self._get_domain(model, id, search)
         data = self._get_filtered_data(model, fields, domain, page)
         return Response(json.dumps(data), content_type="application/json", status=200)
