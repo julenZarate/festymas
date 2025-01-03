@@ -51,7 +51,9 @@ class FestymasController(http.Controller):
             return login_error
         if request.httprequest.path == "/festymas/concerts/home":
             data = self._get_festymas_home_by_model(fields, model)
-            return Response(json.dumps(data), content_type="application/json", status=200)
+            return Response(
+                json.dumps(data), content_type="application/json", status=200
+            )
         domain = self._get_domain(model, id, search)
         data = self._get_filtered_data(model, fields, domain, page)
         return Response(json.dumps(data), content_type="application/json", status=200)
@@ -91,7 +93,9 @@ class FestymasController(http.Controller):
             return login_error
         if request.httprequest.path == "/festymas/concerts/home":
             data = self._get_festymas_home_by_model(fields, model)
-            return Response(json.dumps(data), content_type="application/json", status=200)
+            return Response(
+                json.dumps(data), content_type="application/json", status=200
+            )
         domain = self._post_domain(model, id, search)
         data = self._get_filtered_data(model, fields, domain, page)
         return Response(json.dumps(data), content_type="application/json", status=200)
@@ -130,7 +134,9 @@ class FestymasController(http.Controller):
         if login_error:
             return login_error
         if request.httprequest.path == "/festymas/festivals/home":
-            return Response(json.dumps(data), content_type="application/json", status=200)
+            return Response(
+                json.dumps(data), content_type="application/json", status=200
+            )
             return data
         domain = self._get_domain(model, id, search)
         data = self._get_filtered_data(model, fields, domain, page)
@@ -170,7 +176,9 @@ class FestymasController(http.Controller):
         if login_error:
             return login_error
         if request.httprequest.path == "/festymas/festivals/home":
-            return Response(json.dumps(data), content_type="application/json", status=200)
+            return Response(
+                json.dumps(data), content_type="application/json", status=200
+            )
             return data
         domain = self._post_domain(model, id, search)
         data = self._get_filtered_data(model, fields, domain, page)
@@ -209,7 +217,9 @@ class FestymasController(http.Controller):
             return login_error
         if request.httprequest.path == "/festymas/participants/home":
             data = self._get_festymas_home_by_model(fields, model)
-            return Response(json.dumps(data), content_type="application/json", status=200)
+            return Response(
+                json.dumps(data), content_type="application/json", status=200
+            )
         domain = self._get_domain(model, id, search)
         data = self._get_filtered_data(model, fields, domain, page)
         return Response(json.dumps(data), content_type="application/json", status=200)
@@ -247,7 +257,9 @@ class FestymasController(http.Controller):
             return login_error
         if request.httprequest.path == "/festymas/participants/home":
             data = self._get_festymas_home_by_model(fields, model)
-            return Response(json.dumps(data), content_type="application/json", status=200)
+            return Response(
+                json.dumps(data), content_type="application/json", status=200
+            )
         domain = self._post_domain(model, id, search)
         data = self._get_filtered_data(model, fields, domain, page)
         return data
@@ -490,12 +502,16 @@ class FestymasController(http.Controller):
             if body.get("user"):
                 login = body.get("user").get("login")
                 password = body.get("user").get("password")
-        user = request.env["res.users"].sudo().create(
-            {
-                "name": name,
-                "login": login,
-                "password": password,
-            }
+        user = (
+            request.env["res.users"]
+            .sudo()
+            .create(
+                {
+                    "name": name,
+                    "login": login,
+                    "password": password,
+                }
+            )
         )
         return user
 
