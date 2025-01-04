@@ -106,7 +106,7 @@ class FestymasController(http.Controller):
             "/festymas/festivals/<string:id>",
             "/festymas/festivals/page/<int:page>",
             "/festymas/festivals/home",
-            "/festymas/concerts/search/<string:search>",
+            "/festymas/festivals/search/<string:search>",
         ],
         type="http",
         cors="*",
@@ -139,7 +139,10 @@ class FestymasController(http.Controller):
                 json.dumps(data), content_type="application/json", status=200
             )
         domain = self._get_domain(model, id, search)
-        data = self._get_filtered_data(model, fields, domain, page)
+        try:
+            data = self._get_filtered_data(model, fields, domain, page)
+        except AccessDenied as e:
+            return Response("Error de Busqueda!!!", status=403)
         return Response(json.dumps(data), content_type="application/json", status=200)
 
     @http.route(
@@ -556,17 +559,23 @@ class FestymasController(http.Controller):
         if page:
             offset = ((page - 1) * self._items_per_page,)
             limit = self._items_per_page
-        filtered_data = model_env.sudo().search_read(
-            domain=domain,
-            fields=search_fields,
-            limit=limit,
-            offset=offset,
-            order=sort,
-        )
+        try:
+            filtered_data = model_env.sudo().search_read(
+                domain=domain,
+                fields=search_fields,
+                limit=limit,
+                offset=offset,
+                order=sort,
+            )
+        except Exception as e:
+            return {"error": "Error de Busqueda!!"}
+        total_items = self._get_model_count(model, domain)
         pagination = {
                 "max_pages": math.ceil(
-                    self._get_model_count(model, domain) / self._items_per_page
-                )
+                    total_items / self._items_per_page
+                ),
+                "total_items": total_items,
+                "items_per_page": self._items_per_page,
             }
         data = {
             "data": filtered_data,
