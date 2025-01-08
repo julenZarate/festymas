@@ -37,7 +37,7 @@ class FestymasController(http.Controller):
             "name",
             "description",
             "location_id",
-            # "start_date",
+            "start_date",
             "price",
             "genres",
             "festymas_participant_ids",
@@ -46,17 +46,22 @@ class FestymasController(http.Controller):
             "image_url",
             "visit_count",
         ]
+        fields = self._get_fields(model)
         login_error = False
         if login_error:
             return login_error
         if request.httprequest.path == "/festymas/concerts/home":
             data = self._get_festymas_home_by_model(fields, model)
             return Response(
-                json.dumps(data), content_type="application/json", status=200
+                json.dumps(data, default=str),
+                content_type="application/json",
+                status=200,
             )
         domain = self._get_domain(model, id, search)
         data = self._get_filtered_data(model, fields, domain, page)
-        return Response(json.dumps(data), content_type="application/json", status=200)
+        return Response(
+            json.dumps(data, default=str), content_type="application/json", status=200
+        )
 
     @http.route(
         [
@@ -79,7 +84,7 @@ class FestymasController(http.Controller):
             "name",
             "description",
             "location_id",
-            # "start_date",
+            "start_date",
             "price",
             "genres",
             "festymas_participant_ids",
@@ -88,17 +93,20 @@ class FestymasController(http.Controller):
             "image_url",
             "visit_count",
         ]
+        fields = self._get_fields(model)
         login_error = False
         if login_error:
             return login_error
         if request.httprequest.path == "/festymas/concerts/home":
             data = self._get_festymas_home_by_model(fields, model)
             return Response(
-                json.dumps(data), content_type="application/json", status=200
+                json.dumps(data, default=str),
+                content_type="application/json",
+                status=200,
             )
         domain = self._post_domain(model, id, search)
         data = self._get_filtered_data(model, fields, domain, page)
-        return Response(json.dumps(data), content_type="application/json", status=200)
+        return data
 
     @http.route(
         [
@@ -121,8 +129,8 @@ class FestymasController(http.Controller):
             "name",
             "description",
             "location_id",
-            # "start_date",
-            # "end_date",
+            "start_date",
+            "end_date",
             "price",
             "genres",
             "festymas_concert_ids",
@@ -130,20 +138,25 @@ class FestymasController(http.Controller):
             "image_url",
             "visit_count",
         ]
+        fields = self._get_fields(model)
         login_error = False
         if login_error:
             return login_error
         if request.httprequest.path == "/festymas/festivals/home":
             data = self._get_festymas_home_by_model(fields, model)
             return Response(
-                json.dumps(data), content_type="application/json", status=200
+                json.dumps(data, default=str),
+                content_type="application/json",
+                status=200,
             )
         domain = self._get_domain(model, id, search)
         try:
             data = self._get_filtered_data(model, fields, domain, page)
         except AccessDenied as e:
             return Response("Error de Busqueda!!!", status=403)
-        return Response(json.dumps(data), content_type="application/json", status=200)
+        return Response(
+            json.dumps(data, default=str), content_type="application/json", status=200
+        )
 
     @http.route(
         [
@@ -166,8 +179,8 @@ class FestymasController(http.Controller):
             "name",
             "description",
             "location_id",
-            # "start_date",
-            # "end_date",
+            "start_date",
+            "end_date",
             "price",
             "genres",
             "festymas_concert_ids",
@@ -175,17 +188,22 @@ class FestymasController(http.Controller):
             "image_url",
             "visit_count",
         ]
+        fields = self._get_fields(model)
         login_error = False
         if login_error:
             return login_error
         if request.httprequest.path == "/festymas/festivals/home":
             return Response(
-                json.dumps(data), content_type="application/json", status=200
+                json.dumps(data, default=str),
+                content_type="application/json",
+                status=200,
             )
             return data
         domain = self._post_domain(model, id, search)
         data = self._get_filtered_data(model, fields, domain, page)
-        return Response(json.dumps(data), content_type="application/json", status=200)
+        return Response(
+            json.dumps(data, default=str), content_type="application/json", status=200
+        )
 
     @http.route(
         [
@@ -215,17 +233,22 @@ class FestymasController(http.Controller):
             "festymas_genre_ids",
             "image_url",
         ]
+        fields = self._get_fields(model)
         login_error = False
         if login_error:
             return login_error
         if request.httprequest.path == "/festymas/participants/home":
             data = self._get_festymas_home_by_model(fields, model)
             return Response(
-                json.dumps(data), content_type="application/json", status=200
+                json.dumps(data, default=str),
+                content_type="application/json",
+                status=200,
             )
         domain = self._get_domain(model, id, search)
         data = self._get_filtered_data(model, fields, domain, page)
-        return Response(json.dumps(data), content_type="application/json", status=200)
+        return Response(
+            json.dumps(data, default=str), content_type="application/json", status=200
+        )
 
     @http.route(
         [
@@ -244,6 +267,7 @@ class FestymasController(http.Controller):
     )
     def post_festymas_participants(self, id=None, page=None, search=None, **kw):
         model = "festymas.participant"
+        fields = self._get_fields(model)
         fields = [
             "name",
             "description",
@@ -255,13 +279,16 @@ class FestymasController(http.Controller):
             "festymas_genre_ids",
             "image_url",
         ]
+        fields = self._get_fields(model)
         login_error = False
         if login_error:
             return login_error
         if request.httprequest.path == "/festymas/participants/home":
             data = self._get_festymas_home_by_model(fields, model)
             return Response(
-                json.dumps(data), content_type="application/json", status=200
+                json.dumps(data, default=str),
+                content_type="application/json",
+                status=200,
             )
         domain = self._post_domain(model, id, search)
         data = self._get_filtered_data(model, fields, domain, page)
@@ -292,12 +319,15 @@ class FestymasController(http.Controller):
             "festymas_concert_ids",
             "festymas_festival_ids",
         ]
+        fields = self._get_fields(model)
         login_error = False
         if login_error:
             return login_error
         domain = self._get_domain(model, id, search)
         data = self._get_filtered_data(model, fields, domain, page)
-        return Response(json.dumps(data), content_type="application/json", status=200)
+        return Response(
+            json.dumps(data, default=str), content_type="application/json", status=200
+        )
 
     @http.route(
         [
@@ -321,7 +351,9 @@ class FestymasController(http.Controller):
             return login_error
         domain = self._get_domain(model, id, search)
         data = self._get_filtered_data(model, fields, domain, page)
-        return Response(json.dumps(data), content_type="application/json", status=200)
+        return Response(
+            json.dumps(data, default=str), content_type="application/json", status=200
+        )
 
     @http.route(
         [
@@ -346,12 +378,15 @@ class FestymasController(http.Controller):
             "festymas_festival_ids",
             "festymas_concert_ids",
         ]
+        fields = self._get_fields(model)
         login_error = False
         if login_error:
             return login_error
         domain = self._get_domain(model, id, search)
         data = self._get_filtered_data(model, fields, domain, page)
-        return Response(json.dumps(data), content_type="application/json", status=200)
+        return Response(
+            json.dumps(data, default=str), content_type="application/json", status=200
+        )
 
     @http.route(
         [
@@ -373,12 +408,15 @@ class FestymasController(http.Controller):
             "name",
         ]
         fields = ["name"]
+        fields = self._get_fields(model)
         login_error = False
         if login_error:
             return login_error
         domain = self._get_domain(model, id, search)
         data = self._get_filtered_data(model, fields, domain, page)
-        return Response(json.dumps(data), content_type="application/json", status=200)
+        return Response(
+            json.dumps(data, default=str), content_type="application/json", status=200
+        )
 
     @http.route(
         [
@@ -398,12 +436,15 @@ class FestymasController(http.Controller):
         model = "res.country"
         domain = [("country_id", "=", 68)]
         fields = ["name"]
+        fields = self._get_fields(model)
         login_error = False
         if login_error:
             return login_error
         domain = self._get_domain(model, id, search)
         data = self._get_filtered_data(model, fields, domain, page)
-        return Response(json.dumps(data), content_type="application/json", status=200)
+        return Response(
+            json.dumps(data, default=str), content_type="application/json", status=200
+        )
 
     @http.route(
         [
@@ -422,6 +463,25 @@ class FestymasController(http.Controller):
         if login_error:
             return login_error
         data = self._get_festymas_home_by_user(user)
+        return data
+
+    @http.route(
+        [
+            "/festymas/favorites",
+        ],
+        type="json",
+        cors="*",
+        csrf=False,
+        methods=["POST", "OPTIONS"],
+        auth="public",
+        no_jsonrpc=True,
+    )
+    def festymas_favorites(self, id=None, page=None, search=None, **kw):
+        user = self._get_user()
+        login_error = False
+        if login_error:
+            return login_error
+        data = self._get_festymas_favorites_by_user(user)
         return data
 
     @http.route(
@@ -524,8 +584,8 @@ class FestymasController(http.Controller):
             body = request.dispatcher.jsonrequest
             if body.get("ubication"):
                 domain += self._generate_ubication_domain(body.get("ubication"))
-            if body.get("adjustment"):
-                domain += self._generate_adjustment_domain(body.get("adjustment"))
+            if body.get("filters"):
+                domain += self._generate_filters_domain(body.get("filters"))
         if id:
             ids = id.split(",")
             domain.append(("id", "in", ids))
@@ -541,6 +601,14 @@ class FestymasController(http.Controller):
         if search:
             domain.append(("name", "ilike", search))
         return domain
+
+    def _get_fields(self, model):
+        fields = []
+        model_fields = request.env[model]._fields
+        for field in model_fields:
+            if not model_fields[field].type in ["binary"]:
+                fields.append(field)
+        return fields
 
     def _get_filtered_data(self, model, fields, domain, page):
         offset = False
@@ -571,23 +639,38 @@ class FestymasController(http.Controller):
             return {"error": "Error de Busqueda!!"}
         total_items = self._get_model_count(model, domain)
         pagination = {
-                "max_pages": math.ceil(
-                    total_items / self._items_per_page
-                ),
-                "total_items": total_items,
-                "items_per_page": self._items_per_page,
-            }
-        data = {
-            "data": filtered_data,
-            "pagination": pagination
-            }
+            "max_pages": math.ceil(total_items / self._items_per_page),
+            "total_items": total_items,
+            "items_per_page": self._items_per_page,
+        }
+        data = {"data": filtered_data, "pagination": pagination}
         return data
 
     def _get_festymas_home_by_user(self, user):
         data = {
-            "favorite_concert_ids": user.favorite_concert_ids.ids,
-            "favorite_festival_ids": user.favorite_festival_ids.ids,
-            "favorite_participant_ids": user.favorite_participant_ids.ids,
+            "favorite_concert_ids": user.favorite_concert_ids.read(
+                fields=self._get_fields("festymas.concert")
+            ),
+            "favorite_festival_ids": user.favorite_festival_ids.read(
+                fields=self._get_fields("festymas.festival")
+            ),
+            "favorite_participant_ids": user.favorite_participant_ids.read(
+                fields=self._get_fields("festymas.participant")
+            ),
+        }
+        return data
+
+    def _get_festymas_favorites_by_user(self, user):
+        data = {
+            "favorite_concert_ids": user.favorite_concert_ids.read(
+                fields=self._get_fields("festymas.concert")
+            ),
+            "favorite_festival_ids": user.favorite_festival_ids.read(
+                fields=self._get_fields("festymas.festival")
+            ),
+            "favorite_participant_ids": user.favorite_participant_ids.read(
+                fields=self._get_fields("festymas.participant")
+            ),
         }
         return data
 
@@ -655,10 +738,10 @@ class FestymasController(http.Controller):
         count = request.env[model].sudo().search_count(domain)
         return count
 
-    def _generate_adjustment_domain(self, adjustments):
+    def _generate_filters_domain(self, filters):
         domain = []
-        for adjustment in adjustments:
-            domain.append((adjustment, "in", adjustments[adjustment]))
+        for filter in filters:
+            domain.append((filter, "in", filters[filter]))
         return domain
 
     def _generate_ubication_domain(self, ubication):
