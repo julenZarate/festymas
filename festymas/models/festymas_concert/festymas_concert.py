@@ -46,6 +46,7 @@ class FestymasConcert(models.Model):
         max_height=1920,
         store=True,
     )
+    city_id = fields.Many2one(string="City", related="location_id.city_id")
 
     @api.depends("image_url")
     def _compute_image(self):
