@@ -21,22 +21,6 @@ class FestymasLocation(models.Model):
     is_concert_hall = fields.Boolean(
         string="Is concert hall?",
     )
-    # images
-    cartel_1920 = fields.Image("Image", max_width=1920, max_height=1920)
-    # resized fields stored (as attachment) for performance
-    cartel_1024 = fields.Image(
-        "Image 1024", related="cartel_1920", max_width=1024, max_height=1024, store=True
-    )
-    cartel_512 = fields.Image(
-        "Image 512", related="cartel_1920", max_width=512, max_height=512, store=True
-    )
-    cartel_256 = fields.Image(
-        "Image 256", related="cartel_1920", max_width=256, max_height=256, store=True
-    )
-    cartel_128 = fields.Image(
-        "Image 128", related="cartel_1920", max_width=128, max_height=128, store=True
-    )
-    # location fields
     city_id = fields.Many2one(
         "res.city",
         "City",
@@ -44,10 +28,33 @@ class FestymasLocation(models.Model):
         ondelete="cascade",
         index=True,
     )
+    image_url = fields.Char(string="Image URL")
     state_id = fields.Many2one(related="city_id.state_id")
     country_id = fields.Many2one(related="city_id.country_id")
     ubication_x = fields.Float(string="Ubication X")
     ubication_y = fields.Float(string="Ubication Y")
+    image = fields.Image(
+        string="Imagen",
+        compute="_compute_image",
+        max_width=1920,
+        max_height=1920,
+        store=True,
+    )
+
+    @api.depends("image_url")
+    def _compute_image(self):
+        for record in self:
+            if record.image_url:
+                try:
+                    response = requests.get(record.image_url)
+                    if response.status_code == 200:
+                        record.image = base64.b64encode(response.content)
+                    else:
+                        record.image = False
+                except Exception as e:
+                    record.image = False
+            else:
+                record.image = False
 
     def write(self, vals):
         if "city_id" in vals:
