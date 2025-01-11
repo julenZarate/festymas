@@ -66,7 +66,6 @@ class FestymasController(http.Controller):
     @http.route(
         [
             "/festymas/concerts",
-            "/festymas/concerts/<string:id>",
             "/festymas/concerts/page/<int:page>",
             "/festymas/concerts/home",
             "/festymas/concerts/search/<string:search>",
@@ -161,10 +160,9 @@ class FestymasController(http.Controller):
     @http.route(
         [
             "/festymas/festivals",
-            "/festymas/festivals/<string:id>",
             "/festymas/festivals/page/<int:page>",
             "/festymas/festivals/home",
-            "/festymas/concerts/search/<string:search>",
+            "/festymas/festivals/search/<string:search>",
         ],
         type="json",
         cors="*",
@@ -201,9 +199,7 @@ class FestymasController(http.Controller):
             return data
         domain = self._post_domain(model, id, search)
         data = self._get_filtered_data(model, fields, domain, page)
-        return Response(
-            json.dumps(data, default=str), content_type="application/json", status=200
-        )
+        return data
 
     @http.route(
         [
@@ -253,7 +249,6 @@ class FestymasController(http.Controller):
     @http.route(
         [
             "/festymas/participants",
-            "/festymas/participants/<string:id>",
             "/festymas/participants/page/<int:page>",
             "/festymas/participants/home",
             "/festymas/participants/search/<string:search>",
@@ -457,13 +452,33 @@ class FestymasController(http.Controller):
         auth="public",
         no_jsonrpc=True,
     )
-    def festymas_home(self, id=None, page=None, search=None, **kw):
+    def post_festymas_home(self, id=None, page=None, search=None, **kw):
         user = self._get_user()
         login_error = False
         if login_error:
             return login_error
-        data = self._get_festymas_home_by_user(user)
+        data = self._post_festymas_home(user)
         return data
+
+    @http.route(
+        [
+            "/festymas/home",
+        ],
+        type="http",
+        cors="*",
+        csrf=False,
+        methods=["GET", "OPTIONS"],
+        auth="public",
+        no_jsonrpc=True,
+    )
+    def get_festymas_home(self, id=None, page=None, search=None, **kw):
+        login_error = False
+        if login_error:
+            return login_error
+        data = self._get_festymas_home()
+        return Response(
+            json.dumps(data, default=str), content_type="application/json", status=200
+        )
 
     @http.route(
         [
@@ -529,7 +544,7 @@ class FestymasController(http.Controller):
         if login_error:
             return login_error
         if request.httprequest.path == "/festymas/users/ubication":
-            data = self._get_festymas_users_ubication(fields, model, user)
+            data = self._get_festymas_users_ubication(user)
             return data
         if request.httprequest.path == "/festymas/users/adjustments":
             data = self._get_festymas_users_adjustments(fields, model, user)
@@ -582,10 +597,16 @@ class FestymasController(http.Controller):
         domain = []
         if request.dispatcher:
             body = request.dispatcher.jsonrequest
+            if body.get("filters", {}).get("location_id", False) and body.get(
+                "ubication"
+            ):
+                del body["ubication"]
             if body.get("ubication"):
                 domain += self._generate_ubication_domain(body.get("ubication"))
             if body.get("filters"):
                 domain += self._generate_filters_domain(body.get("filters"))
+            if body.get("dates"):
+                domain += self._generate_filters_date_domain(body.get("dates"))
         if id:
             ids = id.split(",")
             domain.append(("id", "in", ids))
@@ -646,16 +667,33 @@ class FestymasController(http.Controller):
         data = {"data": filtered_data, "pagination": pagination}
         return data
 
-    def _get_festymas_home_by_user(self, user):
+    def _get_festymas_home(self):
         data = {
-            "favorite_concert_ids": user.favorite_concert_ids.read(
-                fields=self._get_fields("festymas.concert")
+            "new_festival_ids": self._get_new_festivals(
+                fields=self._get_fields("festymas.festival"), model="festymas.festival"
             ),
-            "favorite_festival_ids": user.favorite_festival_ids.read(
-                fields=self._get_fields("festymas.festival")
+            "trending_concert_ids": self._get_trendings_by_model(
+                fields=self._get_fields("festymas.concert"), model="festymas.concert"
             ),
-            "favorite_participant_ids": user.favorite_participant_ids.read(
-                fields=self._get_fields("festymas.participant")
+            "trending_festival_ids": self._get_trendings_by_model(
+                fields=self._get_fields("festymas.festival"), model="festymas.festival"
+            ),
+        }
+        return data
+
+    def _post_festymas_home(self, user):
+        data = {
+            "near_events": self._get_near_events(
+                ubication=self._get_festymas_users_ubication(user)
+            ),
+            "new_festival_ids": self._get_new_festivals(
+                fields=self._get_fields("festymas.festival"), model="festymas.festival"
+            ),
+            "trending_concert_ids": self._get_trendings_by_model(
+                fields=self._get_fields("festymas.concert"), model="festymas.concert"
+            ),
+            "trending_festival_ids": self._get_trendings_by_model(
+                fields=self._get_fields("festymas.festival"), model="festymas.festival"
             ),
         }
         return data
@@ -674,7 +712,7 @@ class FestymasController(http.Controller):
         }
         return data
 
-    def _get_festymas_home_by_model(self, fields, model):
+    def _get_trendings_by_model(self, fields, model):
         data = (
             request.env[model]
             .sudo()
@@ -682,6 +720,41 @@ class FestymasController(http.Controller):
                 [], fields=fields, order="visit_count desc", limit=self._items_per_home
             )
         )
+        return data
+
+    def _get_new_festivals(self, fields, model):
+        data = (
+            request.env[model]
+            .sudo()
+            .search_read(
+                [], fields=fields, order="create_date desc", limit=self._items_per_home
+            )
+        )
+        return data
+
+    def _get_near_events(self, ubication):
+        data = {}
+        near_concert_ids = (
+            request.env["festymas.concert"]
+            .sudo()
+            .search_read(
+                [],
+                limit=self._items_per_home / 2,
+            )
+        )
+        near_festival_ids = (
+            request.env["festymas.festival"]
+            .sudo()
+            .search_read(
+                [],
+                fields=self._get_fields("festymas.festival"),
+                limit=self._items_per_home / 2,
+            )
+        )
+        data = {
+            "near_concert_ids": near_concert_ids,
+            "near_festival_ids": near_festival_ids,
+        }
         return data
 
     def _get_festymas_users_favorites(self, fields, model, user):
@@ -705,7 +778,7 @@ class FestymasController(http.Controller):
             )
             return "Eliminado de Favoritos!!"
 
-    def _get_festymas_users_ubication(self, fields, model, user):
+    def _get_festymas_users_ubication(self, user):
         if request.dispatcher:
             body = request.dispatcher.jsonrequest
             if body.get("ubication"):
@@ -741,7 +814,20 @@ class FestymasController(http.Controller):
     def _generate_filters_domain(self, filters):
         domain = []
         for filter in filters:
+            if not filters[filter]:
+                continue
             domain.append((filter, "in", filters[filter]))
+        return domain
+
+    def _generate_filters_date_domain(self, filters):
+        domain = []
+        if "start_date" in filters and "end_date" in filters:
+            domain.append("&")
+        for filter in filters:
+            if filter == "start_date":
+                domain.append((filter, ">=", filters.get("start_date")))
+            elif filter == "end_date":
+                domain.append((filter, "<=", filters.get("end_date")))
         return domain
 
     def _generate_ubication_domain(self, ubication):
